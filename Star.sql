@@ -25,9 +25,9 @@ CREATE TABLE d_tempo ( -- FUNÇAO PARA FAZER LOOP COM TODAS AS DATAS DESTE ANO M
 
 CREATE TABLE facts ( --SELECT DE ACCIONA
   idFact SERIAL PRIMARY KEY,
-  idEvento INTEGER REFERENCES d_evento(idEvento),
-  idMeio INTEGER REFERENCES d_meio(idMeio),
-  idTempo INTEGER REFERENCES d_tempo(idTempo)
+  idEvento SERIAL REFERENCES d_evento(idEvento),
+  idMeio SERIAL REFERENCES d_meio(idMeio),
+  idTempo SERIAL REFERENCES d_tempo(idTempo)
 );
 
 INSERT INTO d_evento(numtelefone, instantechamada)
