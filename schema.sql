@@ -128,3 +128,38 @@ CREATE TABLE Solicita (
 	FOREIGN KEY (datahorainicioVideo, numCamara) REFERENCES Video(datahorainicio, numCamara) ON DELETE CASCADE
 );
 
+
+-- PARTE 1 - CONSTRAINS 
+
+CREATE OR REPLACE FUNCTION check_valid_moradalocal(idCoordenador integer, numCamara integer) 
+	RETURNS BOOLEAN AS $$
+BEGIN
+	RETURN EXISTS (
+		SELECT 1
+		FROM audita ad
+			INNER JOIN eventoemergencia ee ON ad.numprocessosocorro = ee.numprocessosocorro
+			INNER JOIN vigia vi ON vi.moradalocal = ee.moradalocal 
+		WHERE 
+			ad.idCoordenador = $1
+			AND vi.numCamara=$2
+	);
+END;
+$$ LANGUAGE plpgsql;
+ALTER TABLE solicita ADD CONSTRAINT idcoordenador_numcamara_constrain CHECK ( check_valid_moradalocal(idcoordenador, numcamara)); 
+
+
+CREATE OR REPLACE FUNCTION check_valid_meioapoio(nummeio integer, nomeentidade varchar(255), numprocessosocorro integer) 
+	RETURNS BOOLEAN AS $$
+BEGIN
+	RETURN EXISTS (
+		SELECT 1
+			FROM meioapoio ma
+				INNER JOIN acciona ac ON ma.nummeio = ac.nummeio AND ma.nomeentidade = ac.nomeentidade
+		WHERE 
+			ma.nummeio = $1
+			AND ma.nomeentidade=$2
+			AND ac.numprocessosocorro = $3
+	);
+END;
+$$ LANGUAGE plpgsql;
+ALTER TABLE alocado ADD CONSTRAINT nummeio_nomentidade_numprocessosocorro_constrain CHECK ( check_valid_meioapoio(nummeio,nomeentidade, numprocessosocorro));
