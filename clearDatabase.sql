@@ -20,3 +20,4 @@ drop table d_evento cascade;
 drop table d_meio cascade;
 drop table d_tempo cascade;
 drop table facts cascade;
+drop function populatetempo();

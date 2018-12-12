@@ -145,7 +145,7 @@ BEGIN
 	);
 END;
 $$ LANGUAGE plpgsql;
-ALTER TABLE solicita ADD CONSTRAINT idcoordenador_numcamara_constrain CHECK ( check_valid_moradalocal(idcoordenador, numcamara)); 
+--ALTER TABLE solicita ADD CONSTRAINT idcoordenador_numcamara_constrain CHECK ( check_valid_moradalocal(idcoordenador, numcamara));
 
 
 CREATE OR REPLACE FUNCTION check_valid_meioapoio(nummeio integer, nomeentidade varchar(255), numprocessosocorro integer) 
@@ -162,4 +162,5 @@ BEGIN
 	);
 END;
 $$ LANGUAGE plpgsql;
-ALTER TABLE alocado ADD CONSTRAINT nummeio_nomentidade_numprocessosocorro_constrain CHECK ( check_valid_meioapoio(nummeio,nomeentidade, numprocessosocorro));
+
+--ALTER TABLE alocado ADD CONSTRAINT nummeio_nomentidade_numprocessosocorro_constrain CHECK ( check_valid_meioapoio(nummeio,nomeentidade, numprocessosocorro));

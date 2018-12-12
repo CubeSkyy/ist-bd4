@@ -25,9 +25,14 @@ INSERT INTO d_meio(nummeio, nomemeio, nomeentidade, tipo)
   SELECT * FROM meiocombate
   );
 
-INSERT INTO d_facts(idData, idMeio, idEvento)
-  SELECT idData, idMeio, idEvento 
-  FROM d_evento, d_meio, d_evento;
+INSERT INTO d_facts(idevento, idmeio, iddata)
+WITH temp as (
+     SELECT *, EXTRACT(day from instantechamada) as dia,  EXTRACT(month from instantechamada) as mes, EXTRACT(year from instantechamada) as ano
+     FROM acciona NATURAL JOIN eventoemergencia
+
+    )
+
+SELECT idevento, idmeio, iddata FROM temp NATURAL  JOIN d_evento NATURAL JOIN d_meio NATURAL JOIN d_tempo;
 
 
 CREATE OR REPLACE FUNCTION populateTempo()
@@ -51,3 +56,13 @@ CREATE OR REPLACE FUNCTION populateTempo()
 
   END
   $$ LANGUAGE plpgsql;
+
+SELECT populatetempo();
+
+--ULTIMA QUERRY
+
+SELECT tipo, ano, mes, count(idmeio)
+FROM d_facts NATURAL JOIN d_evento NATURAL JOIN d_meio NATURAL JOIN d_tempo
+WHERE idevento = 15
+GROUP BY ROLLUP(tipo, ano, mes)
+ORDER BY tipo, ano, mes;
