@@ -16,7 +16,7 @@ CREATE TABLE d_meio ( --3 SELECTS
 
 
 CREATE TABLE d_tempo ( -- FUNÇAO PARA FAZER LOOP COM TODAS AS DATAS DESTE ANO MAIS ANTIGO ATE ANO ACTUAL.
-  idTempo SERIAL PRIMARY KEY,
+  idData SERIAL PRIMARY KEY,
   dia INTEGER,
   mes INTEGER,
   ano INTEGER
@@ -27,7 +27,7 @@ CREATE TABLE facts ( --SELECT DE ACCIONA
   idFact SERIAL PRIMARY KEY,
   idEvento SERIAL REFERENCES d_evento(idEvento),
   idMeio SERIAL REFERENCES d_meio(idMeio),
-  idTempo SERIAL REFERENCES d_tempo(idTempo)
+  idData SERIAL REFERENCES d_tempo(idData)
 );
 
 INSERT INTO d_evento(numtelefone, instantechamada)
@@ -56,6 +56,10 @@ INSERT INTO d_meio(nummeio, nomemeio, nomeentidade, tipo)
   UNION
   SELECT * FROM meiocombate
   );
+
+  INSERT INTO d_facts(idData, idMeio, idEvento)
+    SELECT idData, idMeio, idEvento 
+    FROM d_evento, d_meio, d_evento;
 
 
 CREATE OR REPLACE FUNCTION populateTempo()
